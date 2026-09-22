@@ -59,7 +59,12 @@ export async function getSettings() {
   const team = await readTeam();
   const email = currentUser();
   const user = email ? await readUser(email) : {};
-  return { ...defaults(), ...team, personName: user.personName || '' };
+
+  // Purani saved file me hataye hue keys pade ho sakte hain -- sirf TEAM_KEYS lo
+  const known = {};
+  for (const k of TEAM_KEYS) if (team[k] !== undefined) known[k] = team[k];
+
+  return { ...defaults(), ...known, personName: user.personName || '' };
 }
 
 export async function saveSettings(patch) {
