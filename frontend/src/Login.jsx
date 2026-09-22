@@ -24,6 +24,10 @@ function Mark() {
 }
 
 export default function Login({ cfg, authMessage }) {
+  // Jis URL par app khula hai, redirect URI wahi banti hai --
+  // localhost ho ya Render, dono par sahi dikhega
+  const redirectUri = window.location.origin + '/api/auth/callback';
+
   const [busy, setBusy] = useState(null);
   const [error, setError] = useState(null);
 
@@ -101,7 +105,8 @@ export default function Login({ cfg, authMessage }) {
               <li>
                 Add this authorised redirect URI:
                 <pre className="mt-1.5 p-2 text-[11px] bg-bg border border-linesoft rounded-md whitespace-pre-wrap">
-http://localhost:4000/api/auth/callback</pre>
+                  {redirectUri}
+                </pre>
               </li>
               <li>
                 Put the client ID and secret into <code className="px-1 bg-bg rounded">backend/.env</code>
