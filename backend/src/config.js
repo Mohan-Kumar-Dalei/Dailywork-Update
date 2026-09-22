@@ -1,4 +1,10 @@
-import 'dotenv/config';
+import path from 'node:path';
+import dotenv from 'dotenv';
+import { BACKEND_DIR } from './paths.js';
+
+// .env backend folder me rehti hai, lekin start repo root se bhi ho sakta hai,
+// isliye jagah khud batate hain. Render par values dashboard se aati hain.
+dotenv.config({ path: path.join(BACKEND_DIR, '.env') });
 
 const bool = (v, def = false) =>
   v === undefined ? def : String(v).trim().toLowerCase() === 'true';

@@ -1,13 +1,12 @@
-# Render par dono services ek saath.
-# Blueprint se deploy karo, ya dono ko haath se bana kar yahi values daal do.
+# Ek hi service: Express API + React ka build, dono ek URL par.
+# Isse CORS aur cross-site cookie ka jhamela hi nahi rehta.
 services:
-  # ---------- backend (Express API) ----------
   - type: web
     name: dailywork-backend
     runtime: node
-    rootDir: backend
     plan: free
-    buildCommand: npm install
+    # rootDir nahi -- build ko dono folder chahiye
+    buildCommand: npm run build
     startCommand: npm start
     healthCheckPath: /api/config
     envVars:
@@ -15,52 +14,28 @@ services:
       # Dhyan rahe: har deploy/restart par ye mit jaata hai aur sabko dobara
       # sign in karna padta hai.
       #
-      # Starter par upgrade karte waqt neeche wala disk block khol dena aur
+      # Starter par upgrade karo to neeche wala disk khol dena aur
       # DATA_DIR ko /var/data kar dena:
       #
       # disk:
       #   name: dailywork-data
       #   mountPath: /var/data
       #   sizeGB: 1
-      - key: DATA_DIR
-        value: data
 
-      - key: CLIENT_ORIGIN
-        fromService:
-          type: web
-          name: dailywork-frontend
-          property: host
-      - key: COOKIE_SAMESITE
-        value: none
+      # https par cookie ke liye
       - key: COOKIE_SECURE
         value: "true"
 
-      # ye Render khud nahi bhar sakta -- deploy ke waqt aap doge
+      # ye Render khud nahi bhar sakta
       - key: OAUTH_CLIENT_ID
         sync: false
       - key: OAUTH_CLIENT_SECRET
         sync: false
       - key: OAUTH_REDIRECT
-        sync: false      # https://<backend>.onrender.com/api/auth/callback
+        sync: false      # https://<service>.onrender.com/api/auth/callback
+      - key: CLIENT_ORIGIN
+        sync: false      # https://<service>.onrender.com  (login ke baad wapas yahin)
       - key: SHEET_ID
         sync: false
       - key: LOG_SHEET_ID
         sync: false
-
-  # ---------- frontend (React, static) ----------
-  - type: web
-    name: dailywork-frontend
-    runtime: static
-    rootDir: frontend
-    buildCommand: npm install && npm run build
-    staticPublishPath: dist
-    envVars:
-      - key: VITE_API_URL
-        fromService:
-          type: web
-          name: dailywork-backend
-          property: host
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
