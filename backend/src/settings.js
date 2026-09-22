@@ -35,7 +35,8 @@ function defaults() {
     mailTo: config.mailTo,
     mailCc: config.mailCc,
     subjectPrefix: config.subjectPrefix,
-    reportSheetName: config.reportSheetName,
+    // khaali = mail me sheet ka apna naam jaayega
+    reportSheetName: '',
     mailStyle: 'color',
     extraColumns: []
   };
@@ -89,6 +90,12 @@ export async function saveSettings(patch) {
 
   if (next.dateHeaderRow !== undefined) next.dateHeaderRow = Number(next.dateHeaderRow) || 1;
   if (next.tab !== undefined) next.tab = String(next.tab || '').trim();
+
+  // Nayi sheet chuni hai to purana title galat hai -- hata do, taaki
+  // agli /config call use sheet se dobara padh le.
+  if (next.sheetId !== team.sheetId && incoming.sheetTitle === undefined) {
+    next.sheetTitle = '';
+  }
 
   for (const key of ['mailTo', 'mailCc']) {
     if (incoming[key] !== undefined) {

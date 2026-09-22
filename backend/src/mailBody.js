@@ -20,7 +20,7 @@ const LINE = '#999999';
  */
 export function mailRows(d, opts = {}) {
   return [
-    { id: 'sheetName', label: 'Sheet Name', value: opts.reportSheetName || 'Sourcing_Error_Report' },
+    { id: 'sheetName', label: 'Sheet Name', value: opts.reportSheetName || '' },
     { id: 'sourcing', label: 'Total No. of Sourcing', value: d.sourcing },
     { id: 'fixed', label: 'No. of Fixed', value: d.fixed },
     { id: 'integration', label: 'No. of Integration Fixed', value: d.integration },

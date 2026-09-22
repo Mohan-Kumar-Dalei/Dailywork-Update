@@ -14,7 +14,8 @@ export default function SheetSettings({ initial, onSaved }) {
     sheet: initial?.url || initial?.sheetId || '',
     tab: initial?.tab || '',
     personName: initial?.personName || '',
-    dataRowLabel: initial?.dataRowLabel || 'Daily Achieved'
+    dataRowLabel: initial?.dataRowLabel || 'Daily Achieved',
+    reportSheetName: initial?.reportSheetName || ''
   });
   const [status, setStatus] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -94,6 +95,13 @@ export default function SheetSettings({ initial, onSaved }) {
             <span className={sectionLabel}>Row label that holds the daily count</span>
             <input className={input} value={form.dataRowLabel}
                    onChange={(e) => set('dataRowLabel', e.target.value)} />
+          </label>
+
+          <label className="block mb-3">
+            <span className={sectionLabel}>Sheet name shown in the mail</span>
+            <input className={input} value={form.reportSheetName}
+                   placeholder={initial?.sheetTitle || "the sheet's own name"}
+                   onChange={(e) => set('reportSheetName', e.target.value)} />
           </label>
 
           <button className={btnPrimary} disabled={busy} onClick={save}>

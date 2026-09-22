@@ -52,7 +52,6 @@ export const config = {
   mailTo: list(process.env.MAIL_TO),
   mailCc: list(process.env.MAIL_CC),
   subjectPrefix: process.env.SUBJECT_PREFIX || 'Work Details of',
-  reportSheetName: process.env.REPORT_SHEET_NAME || 'Sourcing_Error_Report',
   totalPendingRule: process.env.TOTAL_PENDING_RULE === 'pending' ? 'pending' : 'sum',
 
   // auto = login mil gaya to sheet, warna local json

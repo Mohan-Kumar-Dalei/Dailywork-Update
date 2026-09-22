@@ -22,7 +22,8 @@ export async function makeReport(payload) {
     subject: payload.subject,
     signature: s.personName,
     subjectPrefix: s.subjectPrefix,
-    reportSheetName: s.reportSheetName,
+    // khaali chhoda ho to mail me sheet ka apna naam jaata hai
+    reportSheetName: s.reportSheetName || s.sheetTitle,
     mailStyle: payload.mailStyle || s.mailStyle,
     extraColumns: s.extraColumns
   });

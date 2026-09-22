@@ -59,33 +59,10 @@ export function buildNote(d) {
   return rows.join(SEP);
 }
 
-
 /** Subject. User ne apna likha ho to wahi, warna prefix + date. */
 export function buildSubject(d, opts = {}) {
   const custom = String(opts.subject || '').trim();
   return custom || `${opts.subjectPrefix || config.subjectPrefix} (${d.date})`;
-}
-
-export function buildBody(d, opts = {}) {
-  return [
-    'Hi Sir,',
-    '',
-    'Please find below my work details for today.',
-    '',
-    `Date                                        : ${d.date}`,
-    `Sheet Name                            : ${opts.reportSheetName || config.reportSheetName}`,
-    `Total No. of Sourcing              : ${d.sourcing}`,
-    `No. of Fixed                             : ${d.fixed}`,
-    `No. of Integration Fixed        : ${d.integration}`,
-    `No. of Highlight to Tech Team : ${d.highlight}`,
-    ...(d.custom || []).map((f) => `${f.label} : ${f.value}`),
-    `Pending                                   : ${d.pending}`,
-    `Other Issue                             : ${d.otherIssue}`,
-    '',
-    'Thanks & Regards',
-    '',
-    config.signature
-  ].join('\n');
 }
 
 export function buildReport(input, customFields = [], opts = {}) {
