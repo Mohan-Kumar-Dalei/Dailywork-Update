@@ -23,7 +23,6 @@ export async function makeReport(payload) {
     signature: s.personName,
     subjectPrefix: s.subjectPrefix,
     reportSheetName: s.reportSheetName,
-    testMode: s.testMode,
     mailStyle: payload.mailStyle || s.mailStyle,
     extraColumns: s.extraColumns
   });
@@ -49,7 +48,7 @@ export async function sendReport(payload) {
   await store.log({
     ...report.data,
     cell: saved?.target || '',
-    status: s.testMode ? 'Mailed (TEST)' : 'Mailed',
+    status: 'Mailed',
     savedAt: new Date().toISOString()
   });
 

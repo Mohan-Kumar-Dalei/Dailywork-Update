@@ -11,7 +11,7 @@ import { readTeam, writeTeam, readUser, writeUser } from './users.js';
 const TEAM_KEYS = [
   'sheetId', 'sheetTitle', 'gid', 'tab', 'dataRowLabel', 'dateHeaderRow',
   'writeValue', 'valueField', 'commentMode', 'customFields', 'logSheetId', 'logTab',
-  'mailTo', 'mailCc', 'subjectPrefix', 'reportSheetName', 'testMode', 'testRecipient',
+  'mailTo', 'mailCc', 'subjectPrefix', 'reportSheetName',
   'mailStyle', 'extraColumns'
 ];
 
@@ -36,8 +36,6 @@ function defaults() {
     mailCc: config.mailCc,
     subjectPrefix: config.subjectPrefix,
     reportSheetName: config.reportSheetName,
-    testMode: config.testMode,
-    testRecipient: '',
     mailStyle: 'color',
     extraColumns: []
   };

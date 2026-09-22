@@ -60,17 +60,10 @@ export function buildNote(d) {
 }
 
 
-/**
- * Subject.
- * User ne apna subject likha ho to wahi chalta hai -- bas TEST MODE ka
- * nishaan phir bhi lagta hai, taaki test mail pehchana ja sake.
- */
+/** Subject. User ne apna likha ho to wahi, warna prefix + date. */
 export function buildSubject(d, opts = {}) {
   const custom = String(opts.subject || '').trim();
-  const base = custom || `${opts.subjectPrefix || config.subjectPrefix} (${d.date})`;
-
-  if (!opts.testMode) return base;
-  return base.startsWith('[TEST]') ? base : `[TEST] ${base}`;
+  return custom || `${opts.subjectPrefix || config.subjectPrefix} (${d.date})`;
 }
 
 export function buildBody(d, opts = {}) {

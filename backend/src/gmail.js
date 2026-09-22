@@ -7,14 +7,9 @@ import { google } from 'googleapis';
 import { getAuthClient, whoami } from './googleAuth.js';
 import { getSettings } from './settings.js';
 
-/** TEST MODE me sab mail apne hi address par. */
+/** Mail kisko jaayega -- jo settings me likha hai, wahi. */
 export async function recipients() {
   const s = await getSettings();
-  if (s.testMode) {
-    const me = await whoami();
-    const to = s.testRecipient || me?.email;
-    return { to: to ? [to] : [], cc: [] };
-  }
   return { to: s.mailTo || [], cc: s.mailCc || [] };
 }
 

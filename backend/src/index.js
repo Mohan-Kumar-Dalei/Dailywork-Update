@@ -60,5 +60,4 @@ app.listen(config.port, () => {
   console.log(`Server: ${config.publicUrl || 'http://localhost:' + config.port}`);
   console.log(`Data  : ${DATA_DIR}`);
   console.log(`Client: ${hasBuild ? CLIENT_DIST : 'not built (Vite alag chal raha hoga)'}`);
-  console.log(`Mail  : ${config.testMode ? 'TEST MODE' : 'live'}`);
 });

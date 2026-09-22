@@ -3,13 +3,10 @@ import { api } from './api.js';
 import Spinner from './Spinner.jsx';
 import {
   cx, sectionLabel, input, btnPrimary, btnGhost, btnSmall,
-  chip, chipOn, statusOk, statusErr
+  statusOk, statusErr
 } from './ui.js';
 
-/**
- * Mail kisko jaayega. Test mode on ho to ye sab dikhta hai lekin lagta nahi --
- * mail phir bhi sirf aapko jaata hai.
- */
+/** Mail kisko jaayega -- yehi log report paate hain. */
 export default function MailSettings({ settings, onSaved }) {
   const [open, setOpen] = useState(false);
   const [to, setTo] = useState('');
@@ -47,8 +44,6 @@ export default function MailSettings({ settings, onSaved }) {
     if (await save({ mailTo: to, mailCc: cc })) setOpen(false);
   }
 
-  const testMode = Boolean(settings?.testMode);
-
   return (
     <div className="mb-3.5 px-3 py-2.5 bg-bg border border-linesoft rounded-[9px]">
       <div className="flex items-center justify-between gap-2.5 max-sm:flex-col max-sm:items-stretch">
@@ -63,15 +58,7 @@ export default function MailSettings({ settings, onSaved }) {
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
-          <button
-            className={cx(chip, testMode && chipOn)}
-            disabled={busy}
-            onClick={() => save({ testMode: !testMode })}
-            title="In test mode the mail goes only to you"
-          >
-            {busy && <Spinner />}
-            Test mode {testMode ? 'on' : 'off'}
-          </button>
+          {busy && <Spinner />}
           <button className={cx(btnGhost, btnSmall)} onClick={() => setOpen((o) => !o)}>
             {open ? 'Hide' : 'Change'}
           </button>

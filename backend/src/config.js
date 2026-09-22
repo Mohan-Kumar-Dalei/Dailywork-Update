@@ -44,9 +44,7 @@ export const config = {
   // Abhi sirf sheet ka kaam. Mail wala hissa baad me on karenge.
   mailEnabled: bool(process.env.MAIL_ENABLED, true),
 
-  testMode: bool(process.env.TEST_MODE, false),
   publicUrl,
-  testRecipient: process.env.TEST_RECIPIENT || '',
 
   mailTo: list(process.env.MAIL_TO),
   mailCc: list(process.env.MAIL_CC),

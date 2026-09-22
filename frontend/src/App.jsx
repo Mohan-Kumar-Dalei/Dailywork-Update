@@ -178,12 +178,9 @@ export default function App() {
   /** Ek hi click -- sheet me value + comment, aur mail. */
   function confirmSaveAndSend() {
     const to = cfg?.recipients?.to || [];
-    const test = cfg?.settings?.testMode;
     setAsk({
-      title: test ? 'Save and send a test mail?' : 'Save and send the report?',
-      message: test
-        ? 'The sheet gets updated. Test mode is on, so the mail goes only to you.'
-        : 'The sheet gets updated and the mail goes out. It cannot be taken back.',
+      title: 'Save and send the report?',
+      message: 'The sheet gets updated and the mail goes out. It cannot be taken back.',
       confirmLabel: 'Save & send',
       rows: [
         { label: 'Sheet cell', value: target?.cell ? target.tab + '!' + target.cell : '-' },
@@ -467,15 +464,7 @@ export default function App() {
       </div>
 
       <section className={card}>
-        <h2 className={cx(cardTitle, 'flex items-center justify-between gap-2.5')}>
-          Mail
-          {cfg.settings.testMode && (
-            <span className="px-2.5 py-0.5 text-[10.5px] font-bold tracking-wider rounded-full
-                             bg-warnbg text-warntext border border-[#f0d49a]">
-              TEST MODE
-            </span>
-          )}
-        </h2>
+        <h2 className={cardTitle}>Mail</h2>
 
         <MailSettings
           settings={cfg.settings}
