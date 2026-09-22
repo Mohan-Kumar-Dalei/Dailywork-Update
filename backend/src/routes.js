@@ -8,7 +8,7 @@ import { sessionId, setSessionCookie } from './middleware.js';
 import { startSession, endSession, knownUsers } from './sessions.js';
 import {
   authKind, authUrl, exchangeCode, logout, whoami, oauthConfigured,
-  availableClients, parseState
+  availableClients, parseState, redirectUriFor
 } from './googleAuth.js';
 import { composeUrl, recipients, forgetSignature } from './gmail.js';
 import { makeReport, sendReport } from './sendReport.js';
@@ -40,7 +40,7 @@ async function resolveTarget(date) {
 router.get('/auth/url', wrap(async (req, res) => {
   const sid = sessionId(req, res);        // cookie yahin set hoti hai
   const kind = req.query.as === 'work' ? 'work' : 'personal';
-  res.json({ url: authUrl(sid, kind) });
+  res.json({ url: authUrl(sid, kind, redirectUriFor(req)) });
 }));
 
 /** Google yahan wapas bhejta hai. */
@@ -54,7 +54,7 @@ router.get('/auth/callback', async (req, res) => {
     const { sid, kind } = parseState(req.query.state);
     if (!sid) throw new Error('Session missing. Please try signing in again.');
 
-    const { email } = await exchangeCode(req.query.code, kind);
+    const { email } = await exchangeCode(req.query.code, kind, redirectUriFor(req));
     await startSession(sid, email);
     setSessionCookie(res, sid);
     res.redirect(back + '/?auth=ok');

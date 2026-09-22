@@ -31,8 +31,10 @@ services:
         sync: false
       - key: OAUTH_CLIENT_SECRET
         sync: false
-      - key: OAUTH_REDIRECT
-        sync: false      # https://<service>.onrender.com/api/auth/callback
+      # Optional -- khaali chhodo to app apne hi URL se callback bana lega.
+      # Sirf tab set karo jab custom domain par ho.
+      # - key: OAUTH_REDIRECT
+      #   sync: false    # https://<service>.onrender.com/api/auth/callback
       - key: CLIENT_ORIGIN
         sync: false      # https://<service>.onrender.com  (login ke baad wapas yahin)
       - key: SHEET_ID

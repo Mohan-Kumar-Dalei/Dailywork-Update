@@ -10,6 +10,10 @@ import { CLIENT_DIST, DATA_DIR } from './paths.js';
 
 const app = express();
 
+// Render proxy ke peeche chalta hai -- iske bina req.protocol hamesha http
+// aata hai aur callback URL galat ban jaata hai
+app.set('trust proxy', 1);
+
 /*
  * CORS sirf tab kaam aata hai jab frontend kisi aur domain par ho.
  * Ek hi service me dono chal rahe hon to same origin hota hai aur ye

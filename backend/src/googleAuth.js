@@ -24,9 +24,18 @@ export const SCOPES = (
   'https://www.googleapis.com/auth/userinfo.profile'
 ).split(/\s+/).filter(Boolean);
 
-export const REDIRECT_URI =
-  process.env.OAUTH_REDIRECT ||
-  'http://localhost:' + (process.env.PORT || 4000) + '/api/auth/callback';
+/**
+ * Google ko jo callback URL bhejte hain.
+ *
+ * OAUTH_REDIRECT set ho to wahi. Warna jis URL par app chal raha hai usi se
+ * bana lete hain -- isse deploy ke baad "redirect_uri_mismatch" wali galti
+ * nahi hoti. Dono jagah (login aur callback) ek hi URI jaani chahiye.
+ */
+export function redirectUriFor(req) {
+  if (process.env.OAUTH_REDIRECT) return process.env.OAUTH_REDIRECT;
+  if (req) return `${req.protocol}://${req.get('host')}/api/auth/callback`;
+  return 'http://localhost:' + (process.env.PORT || 4000) + '/api/auth/callback';
+}
 
 /**
  * Do OAuth clients:
@@ -72,14 +81,14 @@ export function hasServiceAccount() {
   return fs.existsSync(path.resolve(process.cwd(), file));
 }
 
-export function makeOAuthClient(kind = 'personal') {
+export function makeOAuthClient(kind = 'personal', redirectUri) {
   const c = CLIENTS[kind];
   if (!c || !c.id) throw new Error(`The "${kind}" sign-in option is not set up yet.`);
-  return new google.auth.OAuth2(c.id, c.secret, REDIRECT_URI);
+  return new google.auth.OAuth2(c.id, c.secret, redirectUri || redirectUriFor());
 }
 
 /** Consent page ka URL. state me "<sessionId>.<client>" jaata hai. */
-export function authUrl(sid, kind = 'personal') {
+export function authUrl(sid, kind = 'personal', redirectUri) {
   if (!clientConfigured(kind)) {
     throw new Error(
       'This sign-in option is not configured yet. Add its client ID and secret to server/.env.'
@@ -92,7 +101,7 @@ export function authUrl(sid, kind = 'personal') {
     state: sid + '.' + kind
   };
   if (CLIENTS[kind].hd) opts.hd = CLIENTS[kind].hd;   // account chooser usi domain tak
-  return makeOAuthClient(kind).generateAuthUrl(opts);
+  return makeOAuthClient(kind, redirectUri).generateAuthUrl(opts);
 }
 
 /** state string ko wapas khol do. */
@@ -104,8 +113,8 @@ export function parseState(state) {
 }
 
 /** Code -> token + us token ka email. */
-export async function exchangeCode(code, kind = 'personal') {
-  const client = makeOAuthClient(kind);
+export async function exchangeCode(code, kind = 'personal', redirectUri) {
+  const client = makeOAuthClient(kind, redirectUri);
   const { tokens } = await client.getToken(code);
   client.setCredentials(tokens);
 
