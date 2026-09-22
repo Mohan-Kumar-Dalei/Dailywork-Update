@@ -38,7 +38,6 @@ export const config = {
   mailCc: list(process.env.MAIL_CC),
   subjectPrefix: process.env.SUBJECT_PREFIX || 'Work Details of',
   reportSheetName: process.env.REPORT_SHEET_NAME || 'Sourcing_Error_Report',
-  signature: process.env.SIGNATURE || 'Mohan Kumar Dalei',
   totalPendingRule: process.env.TOTAL_PENDING_RULE === 'pending' ? 'pending' : 'sum',
 
   // auto = login mil gaya to sheet, warna local json
@@ -48,7 +47,6 @@ export const config = {
     id: process.env.SHEET_ID || '',
     gid: process.env.SHEET_GID || '0',
     tab: process.env.SHEET_TAB || 'Sheet1',
-    personName: process.env.PERSON_NAME || 'Mohan Kumar Dalei',
     // naam ke neeche jis row me roz ka count jaata hai
     dataRowLabel: process.env.DATA_ROW_LABEL || 'Daily Achieved',
     dateHeaderRow: Number(process.env.DATE_HEADER_ROW || 1),
@@ -65,25 +63,5 @@ export const config = {
   log: {
     id: process.env.LOG_SHEET_ID || '',
     tab: process.env.LOG_TAB || 'Demowork History'
-  },
-
-  smtp: {
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: Number(process.env.SMTP_PORT || 587),
-    user: process.env.SMTP_USER || '',
-    pass: process.env.SMTP_PASS || '',
-    from: process.env.MAIL_FROM || process.env.SMTP_USER || ''
   }
 };
-
-export function recipients() {
-  return config.testMode ? [config.testRecipient].filter(Boolean) : config.mailTo;
-}
-
-export function ccList() {
-  return config.testMode ? [] : config.mailCc;
-}
-
-export function mailConfigured() {
-  return config.mailEnabled && Boolean(config.smtp.user && config.smtp.pass);
-}
