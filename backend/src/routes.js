@@ -16,10 +16,19 @@ import { listJobs, addJob, cancelJob } from './scheduler.js';
 
 export const router = Router();
 
+/**
+ * Har route ka error 400 ban jaata hai. Jo error humne khud phenke hain
+ * (jaise "Pick your name first") wo user ke liye hain -- unka stack bekaar
+ * hai. Baaki sab asli bug hai, isliye poora stack server log me jaata hai,
+ * warna Render par kuch pata hi nahi chalta.
+ */
 const wrap = (fn) => (req, res) => {
-  Promise.resolve(fn(req, res)).catch((err) =>
-    res.status(400).json({ error: err.message })
-  );
+  Promise.resolve(fn(req, res)).catch((err) => {
+    if (!(err instanceof Error) || err.name !== 'Error') {
+      console.error(`${req.method} ${req.originalUrl} failed:`, err);
+    }
+    res.status(400).json({ error: err.message || String(err) });
+  });
 };
 
 /** Sign in kiye bina aage mat jaane do. */
