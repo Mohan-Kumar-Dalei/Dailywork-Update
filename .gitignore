@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.env
+
+# ye sab local data hain -- kabhi commit nahi karne
+backend/data/
+backend/service-account.json
+backend/token.json

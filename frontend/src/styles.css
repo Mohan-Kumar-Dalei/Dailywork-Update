@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+/*
+ * Poora UI Tailwind me hai. Yahan sirf theme hai --
+ * Tailwind v4 me --color-x likhne se bg-x / text-x / border-x / stroke-x
+ * classes apne aap ban jaati hain, to hex codes kahin aur nahi likhne padte.
+ */
+@theme {
+  --font-sans: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --color-bg: #f7f1e8;
+  --color-bg2: #efe5d6;
+  --color-card: #fffaf3;
+  --color-line: #e6d8c4;
+  --color-linesoft: #f0e6d8;
+
+  --color-ink: #3b2f25;
+  --color-dim: #8a7562;
+  --color-faint: #a8917c;
+
+  --color-brand: #c96a3a;
+  --color-brand2: #e0913f;
+  --color-brandsoft: #fbeade;
+
+  --color-okbg: #eef4e4;
+  --color-oktext: #476030;
+  --color-warnbg: #fdf1da;
+  --color-warntext: #8a6212;
+  --color-errbg: #fbe8e3;
+  --color-errtext: #8d3d2f;
+
+  /* mail ke table ka neela -- server ke mailBody.js me bhi yahi hai */
+  --color-mailblue: #1155cc;
+}
+

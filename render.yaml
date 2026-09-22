@@ -1,0 +1,62 @@
+# Render par dono services ek saath.
+# Blueprint se deploy karo, ya dono ko haath se bana kar yahi values daal do.
+services:
+  # ---------- backend (Express API) ----------
+  - type: web
+    name: dailywork-backend
+    runtime: node
+    rootDir: backend
+    # Disk sirf paid instance par milti hai. Free par chalana ho to
+    # neeche ka "disk:" block hata do -- lekin phir har deploy ke baad
+    # sabko dobara sign in karna padega.
+    plan: starter
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/config
+    # Tokens, sessions aur team settings files me rehti hain.
+    # Disk ke bina har deploy par sab mit jaayega aur sabko dobara
+    # sign in karna padega.
+    disk:
+      name: dailywork-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: DATA_DIR
+        value: /var/data
+      - key: CLIENT_ORIGIN
+        fromService:
+          type: web
+          name: dailywork-frontend
+          property: host
+      - key: COOKIE_SAMESITE
+        value: none
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: OAUTH_REDIRECT
+        sync: false      # https://dailywork-backend.onrender.com/api/auth/callback
+      - key: OAUTH_CLIENT_ID
+        sync: false
+      - key: OAUTH_CLIENT_SECRET
+        sync: false
+      - key: SHEET_ID
+        sync: false
+      - key: LOG_SHEET_ID
+        sync: false
+
+  # ---------- frontend (React, static) ----------
+  - type: web
+    name: dailywork-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: dailywork-backend
+          property: host
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
