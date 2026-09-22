@@ -6,23 +6,25 @@ services:
     name: dailywork-backend
     runtime: node
     rootDir: backend
-    # Disk sirf paid instance par milti hai. Free par chalana ho to
-    # neeche ka "disk:" block hata do -- lekin phir har deploy ke baad
-    # sabko dobara sign in karna padega.
-    plan: starter
+    plan: free
     buildCommand: npm install
     startCommand: npm start
     healthCheckPath: /api/config
-    # Tokens, sessions aur team settings files me rehti hain.
-    # Disk ke bina har deploy par sab mit jaayega aur sabko dobara
-    # sign in karna padega.
-    disk:
-      name: dailywork-data
-      mountPath: /var/data
-      sizeGB: 1
     envVars:
+      # Free plan par disk nahi milti, isliye data service ke apne folder me.
+      # Dhyan rahe: har deploy/restart par ye mit jaata hai aur sabko dobara
+      # sign in karna padta hai.
+      #
+      # Starter par upgrade karte waqt neeche wala disk block khol dena aur
+      # DATA_DIR ko /var/data kar dena:
+      #
+      # disk:
+      #   name: dailywork-data
+      #   mountPath: /var/data
+      #   sizeGB: 1
       - key: DATA_DIR
-        value: /var/data
+        value: data
+
       - key: CLIENT_ORIGIN
         fromService:
           type: web
@@ -32,12 +34,14 @@ services:
         value: none
       - key: COOKIE_SECURE
         value: "true"
-      - key: OAUTH_REDIRECT
-        sync: false      # https://dailywork-backend.onrender.com/api/auth/callback
+
+      # ye Render khud nahi bhar sakta -- deploy ke waqt aap doge
       - key: OAUTH_CLIENT_ID
         sync: false
       - key: OAUTH_CLIENT_SECRET
         sync: false
+      - key: OAUTH_REDIRECT
+        sync: false      # https://<backend>.onrender.com/api/auth/callback
       - key: SHEET_ID
         sync: false
       - key: LOG_SHEET_ID
