@@ -8,6 +8,9 @@ import { config } from './config.js';
 import { currentUser } from './context.js';
 import { readTeam, writeTeam, readUser, writeUser } from './users.js';
 
+/** Mail ki "Sheet Name" row ka default -- settings me badal sakte hain. */
+export const DEFAULT_REPORT_SHEET_NAME = 'Sourcing_Error_Report';
+
 const TEAM_KEYS = [
   'sheetId', 'sheetTitle', 'gid', 'tab', 'dataRowLabel', 'dateHeaderRow',
   'writeValue', 'valueField', 'commentMode', 'customFields', 'logSheetId', 'logTab',
@@ -35,8 +38,7 @@ function defaults() {
     mailTo: config.mailTo,
     mailCc: config.mailCc,
     subjectPrefix: config.subjectPrefix,
-    // khaali = mail me sheet ka apna naam jaayega
-    reportSheetName: '',
+    reportSheetName: DEFAULT_REPORT_SHEET_NAME,
     mailStyle: 'color',
     extraColumns: []
   };
@@ -90,6 +92,11 @@ export async function saveSettings(patch) {
 
   if (next.dateHeaderRow !== undefined) next.dateHeaderRow = Number(next.dateHeaderRow) || 1;
   if (next.tab !== undefined) next.tab = String(next.tab || '').trim();
+
+  // Field khaali chhoda ho to default wapas lag jaaye, blank na rahe
+  if (next.reportSheetName !== undefined && !String(next.reportSheetName).trim()) {
+    delete next.reportSheetName;
+  }
 
   // Nayi sheet chuni hai to purana title galat hai -- hata do, taaki
   // agli /config call use sheet se dobara padh le.

@@ -6,7 +6,7 @@
  * token use karna hai ye pata nahi chalega.
  */
 import { buildReport } from './report.js';
-import { getSettings } from './settings.js';
+import { getSettings, DEFAULT_REPORT_SHEET_NAME } from './settings.js';
 import { currentUser } from './context.js';
 import { store } from './store/index.js';
 import { sendReportMail, signatureFor } from './gmail.js';
@@ -22,8 +22,8 @@ export async function makeReport(payload) {
     subject: payload.subject,
     signature: s.personName,
     subjectPrefix: s.subjectPrefix,
-    // khaali chhoda ho to mail me sheet ka apna naam jaata hai
-    reportSheetName: s.reportSheetName || s.sheetTitle,
+    // khaali kar diya ho to default hi bhej do, row kabhi blank na dikhe
+    reportSheetName: s.reportSheetName || DEFAULT_REPORT_SHEET_NAME,
     mailStyle: payload.mailStyle || s.mailStyle,
     extraColumns: s.extraColumns
   });

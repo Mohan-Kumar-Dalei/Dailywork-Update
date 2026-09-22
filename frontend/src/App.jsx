@@ -262,8 +262,7 @@ export default function App() {
   const hasRecipients = Boolean(cfg.recipients?.to?.length);
 
   const tableRows = [
-    { id: 'sheetName', label: 'Sheet Name',
-      value: cfg.settings.reportSheetName || cfg.settings.sheetTitle, readOnly: true },
+    { id: 'sheetName', label: 'Sheet Name', value: cfg.settings.reportSheetName, readOnly: true },
     { id: 'sourcing', label: 'Total No. of Sourcing', value: form.sourcing, key: 'sourcing' },
     { id: 'fixed', label: 'No. of Fixed', value: form.fixed, key: 'fixed' },
     { id: 'integration', label: 'No. of Integration Fixed', value: form.integration, key: 'integration' },

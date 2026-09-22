@@ -100,7 +100,7 @@ export default function SheetSettings({ initial, onSaved }) {
           <label className="block mb-3">
             <span className={sectionLabel}>Sheet name shown in the mail</span>
             <input className={input} value={form.reportSheetName}
-                   placeholder={initial?.sheetTitle || "the sheet's own name"}
+                   placeholder="Sourcing_Error_Report"
                    onChange={(e) => set('reportSheetName', e.target.value)} />
           </label>
 
