@@ -10,7 +10,7 @@
  * leta hai lekin cell se jodta nahi — pehchan: quotedFileContent khaali.)
  */
 import fs from 'node:fs/promises';
-import { dataFile } from './paths.js';
+import { DATA_DIR, dataFile } from './paths.js';
 import { google } from 'googleapis';
 import { getAuthClient } from './googleAuth.js';
 
@@ -35,7 +35,7 @@ async function readMap() {
 }
 
 async function writeMap(map) {
-  await fs.mkdir(path.dirname(MAP_FILE), { recursive: true });
+  await fs.mkdir(DATA_DIR, { recursive: true });
   await fs.writeFile(MAP_FILE, JSON.stringify(map, null, 2));
 }
 
