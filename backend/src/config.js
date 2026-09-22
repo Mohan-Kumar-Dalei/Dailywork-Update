@@ -22,6 +22,13 @@ const asOrigin = (value) => {
   return (v.startsWith('localhost') || v.startsWith('127.0.0.1') ? 'http://' : 'https://') + v;
 };
 
+/**
+ * App ka apna public URL. Render ye khud RENDER_EXTERNAL_URL me deta hai;
+ * local par localhost hi hai. Sirf log/display ke liye.
+ */
+const publicUrl = (process.env.PUBLIC_URL || process.env.RENDER_EXTERNAL_URL || '')
+  .trim().replace(/\/$/, '');
+
 export const config = {
   port: Number(process.env.PORT || 4000),
   // Ek se zyada origin comma se: local + Render ka URL
@@ -37,7 +44,8 @@ export const config = {
   // Abhi sirf sheet ka kaam. Mail wala hissa baad me on karenge.
   mailEnabled: bool(process.env.MAIL_ENABLED, true),
 
-  testMode: bool(process.env.TEST_MODE, true),
+  testMode: bool(process.env.TEST_MODE, false),
+  publicUrl,
   testRecipient: process.env.TEST_RECIPIENT || '',
 
   mailTo: list(process.env.MAIL_TO),
