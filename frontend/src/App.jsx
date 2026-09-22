@@ -62,16 +62,18 @@ export default function App() {
 
   useEffect(() => { localStorage.setItem('dwr_view', view); }, [view]);
 
-  // comment aur mail live bante rahein -- har badlav ke thodi der baad
+  // comment aur mail live bante rahein -- har badlav ke thodi der baad.
+  // Sign in kiye bina preview 401 hi degi, isliye tab maangte hi nahi.
   useEffect(() => {
-    if (!cfg) return;
+    if (!cfg || cfg.auth === 'none') return;
     const t = setTimeout(() => {
       api.preview({ ...form, mailStyle, subject, withTarget: false })
         .then(setReport)
         .catch(() => {});
     }, 250);
     return () => clearTimeout(t);
-  }, [form, mailStyle, subject, cfg?.settings?.customFields, cfg?.settings?.extraColumns]);
+  }, [form, mailStyle, subject, cfg?.auth,
+      cfg?.settings?.customFields, cfg?.settings?.extraColumns]);
 
   // message kuch der baad apne aap chala jaaye
   useEffect(() => {
