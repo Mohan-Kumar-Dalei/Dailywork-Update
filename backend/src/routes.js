@@ -56,7 +56,7 @@ router.get('/auth/callback', async (req, res) => {
 
     const { email } = await exchangeCode(req.query.code, kind, redirectUriFor(req));
     await startSession(sid, email);
-    setSessionCookie(res, sid);
+    setSessionCookie(req, res, sid);
     res.redirect(back + '/?auth=ok');
   } catch (err) {
     res.redirect(back + '/?auth=' + encodeURIComponent(err.message));

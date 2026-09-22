@@ -17,11 +17,12 @@ export function readCookie(req, name) {
   return null;
 }
 
-export function setSessionCookie(res, sid) {
+export function setSessionCookie(req, res, sid) {
   res.cookie(COOKIE, sid, {
     httpOnly: true,
     sameSite: config.cookie.sameSite,
-    secure: config.cookie.secure,
+    // COOKIE_SECURE set ho to wahi, warna https par khud lag jaata hai
+    secure: config.cookie.secure === null ? req.secure : config.cookie.secure,
     maxAge: config.cookie.days * 86400000
   });
 }
@@ -31,7 +32,7 @@ export function sessionId(req, res) {
   let sid = readCookie(req, COOKIE);
   if (!sid) {
     sid = newId();
-    setSessionCookie(res, sid);
+    setSessionCookie(req, res, sid);
   }
   req.sid = sid;
   return sid;

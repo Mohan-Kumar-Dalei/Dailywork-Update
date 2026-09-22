@@ -37,7 +37,10 @@ export const config = {
   cookie: {
     // alag-alag domain par frontend/backend ho to 'none' + secure chahiye
     sameSite: process.env.COOKIE_SAMESITE || 'lax',
-    secure: bool(process.env.COOKIE_SECURE, false),
+    // null = apne aap: https par Secure, http (local) par nahi
+    secure: process.env.COOKIE_SECURE === undefined
+      ? null
+      : bool(process.env.COOKIE_SECURE, false),
     days: Number(process.env.SESSION_DAYS || 30)
   },
 
