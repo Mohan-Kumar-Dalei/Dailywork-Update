@@ -47,6 +47,8 @@ export const api = {
   settings: () => http.get('/settings'),
   saveSettings: (payload) => http.put('/settings', payload),
   names: () => http.get('/names'),
+  contacts: (q) => http.get('/contacts', { params: { q } }),
+  contactNames: (emails) => http.post('/contacts/names', { emails }),
   tabs: () => http.get('/tabs'),
 
   locate: (date) => http.get('/sheet/locate', { params: { date } }),

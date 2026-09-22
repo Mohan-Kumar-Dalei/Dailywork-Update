@@ -1,22 +1,23 @@
 import { useEffect, useState } from 'react';
 import { api } from './api.js';
 import Spinner from './Spinner.jsx';
+import RecipientInput from './RecipientInput.jsx';
 import {
-  cx, sectionLabel, input, btnPrimary, btnGhost, btnSmall,
+  cx, sectionLabel, btnPrimary, btnGhost, btnSmall,
   statusOk, statusErr
 } from './ui.js';
 
 /** Mail kisko jaayega -- yehi log report paate hain. */
 export default function MailSettings({ settings, onSaved }) {
   const [open, setOpen] = useState(false);
-  const [to, setTo] = useState('');
-  const [cc, setCc] = useState('');
+  const [to, setTo] = useState([]);
+  const [cc, setCc] = useState([]);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState(null);
 
   useEffect(() => {
-    setTo((settings?.mailTo || []).join(', '));
-    setCc((settings?.mailCc || []).join(', '));
+    setTo(settings?.mailTo || []);
+    setCc(settings?.mailCc || []);
   }, [settings]);
 
   useEffect(() => {
@@ -67,16 +68,11 @@ export default function MailSettings({ settings, onSaved }) {
 
       {open && (
         <div className="mt-3 pt-3 border-t border-line">
-          <label className="block mb-2.5">
-            <span className={sectionLabel}>To — separate with commas</span>
-            <input className={input} value={to} placeholder="boss@company.com, tl@company.com"
-                   onChange={(e) => setTo(e.target.value)} />
-          </label>
+          <RecipientInput label="To" note="the name appears once the address matches"
+                          value={to} onChange={setTo} />
 
-          <label className="block mb-2.5">
-            <span className={sectionLabel}>Cc — leave empty if not needed</span>
-            <input className={input} value={cc} onChange={(e) => setCc(e.target.value)} />
-          </label>
+          <RecipientInput label="Cc" note="leave empty if not needed"
+                          value={cc} onChange={setCc} />
 
           <button className={btnPrimary} disabled={busy} onClick={saveRecipients}>
             {busy && <Spinner />}

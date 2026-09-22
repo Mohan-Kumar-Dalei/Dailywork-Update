@@ -13,6 +13,7 @@ import {
 import { composeUrl, recipients, forgetSignature } from './gmail.js';
 import { makeReport, sendReport } from './sendReport.js';
 import { listJobs, addJob, cancelJob } from './scheduler.js';
+import { searchPeople, namesFor } from './contacts.js';
 
 export const router = Router();
 
@@ -137,6 +138,16 @@ router.put('/settings', guard(async (req, res) => {
 
 router.get('/tabs', guard(async (_req, res) => res.json(await store.tabs())));
 router.get('/names', guard(async (_req, res) => res.json(await store.names())));
+
+/* ---------- mail recipients ke naam ---------- */
+
+router.get('/contacts', guard(async (req, res) => {
+  res.json(await searchPeople(req.query.q));
+}));
+
+router.post('/contacts/names', guard(async (req, res) => {
+  res.json(await namesFor(req.body?.emails || []));
+}));
 
 /* ---------- report ---------- */
 
