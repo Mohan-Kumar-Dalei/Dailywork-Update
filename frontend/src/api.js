@@ -1,51 +1,63 @@
+import axios from 'axios';
+
 /**
- * Dev me Vite khud /api ko backend par bhej deta hai, isliye base khali hai.
- * Render par dono alag domain par hote hain, to VITE_API_URL me backend ka
- * pura URL daalna padta hai.
+ * Backend se baat karne ka ek hi rasta.
+ *
+ * Dev me Vite khud /api ko backend par bhej deta hai, isliye baseURL khali
+ * rehti hai. Render par dono alag domain par hote hain, to VITE_API_URL me
+ * backend ka URL aata hai (Render sirf hostname deta hai, scheme nahi).
  */
-const BASE = (() => {
+const baseURL = (() => {
   const raw = (import.meta.env.VITE_API_URL || '').trim().replace(/\/$/, '');
-  if (!raw) return '';                          // dev: Vite khud proxy karta hai
-  if (/^https?:\/\//i.test(raw)) return raw;
-  return 'https://' + raw;                      // Render sirf hostname deta hai
+  if (!raw) return '/api';
+  return (/^https?:\/\//i.test(raw) ? raw : 'https://' + raw) + '/api';
 })();
 
-async function call(path, options) {
-  // cookie hamesha saath jaaye -- server isi se pehchanta hai ki kaun hai
-  const res = await fetch(`${BASE}/api${path}`, { credentials: 'include', ...options });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
-  return data;
-}
+export const http = axios.create({
+  baseURL,
+  withCredentials: true,        // session cookie har request ke saath
+  timeout: 60000,               // Render ka free instance neend se uthne me time leta hai
+  headers: { 'Content-Type': 'application/json' }
+});
 
-const body = (method) => (path, payload) =>
-  call(path, {
-    method,
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
+/**
+ * Har jagah `res.data.data` likhne se bachne ke liye seedha data lautate hain,
+ * aur error ko wahi message dete hain jo server ne bheja hai.
+ */
+http.interceptors.response.use(
+  (res) => res.data,
+  (err) => {
+    const fromServer = err.response?.data?.error;
+    const message =
+      fromServer ||
+      (err.code === 'ECONNABORTED' ? 'The server took too long to answer.' : null) ||
+      (err.response ? `Request failed (${err.response.status})` : 'Cannot reach the server.');
 
-const post = body('POST');
-const put = body('PUT');
+    return Promise.reject(new Error(message));
+  }
+);
 
 export const api = {
-  config: () => call('/config'),
-  authUrl: (as) => call('/auth/url' + (as ? '?as=' + as : '')),
-  logout: () => post('/auth/logout', {}),
-  health: () => call('/health'),
-  history: () => call('/history'),
-  names: () => call('/names'),
-  tabs: () => call('/tabs'),
-  settings: () => call('/settings'),
-  saveSettings: (payload) => put('/settings', payload),
-  locate: (date) => call('/sheet/locate?date=' + encodeURIComponent(date)),
-  preview: (form) => post('/preview', form),
-  saveNote: (form) => post('/save-note', form),
-  send: (form) => post('/send', form),
-  composeUrl: (form) => post('/mail/compose-url', form),
+  config: () => http.get('/config'),
+  health: () => http.get('/health'),
 
-  schedule: () => call('/schedule'),
-  addSchedule: (payload) => post('/schedule', payload),
-  cancelSchedule: (id) => call('/schedule/' + id, { method: 'DELETE' })
+  authUrl: (as) => http.get('/auth/url', { params: as ? { as } : {} }),
+  logout: () => http.post('/auth/logout'),
+
+  settings: () => http.get('/settings'),
+  saveSettings: (payload) => http.put('/settings', payload),
+  names: () => http.get('/names'),
+  tabs: () => http.get('/tabs'),
+
+  locate: (date) => http.get('/sheet/locate', { params: { date } }),
+  preview: (form) => http.post('/preview', form),
+  saveNote: (form) => http.post('/save-note', form),
+  history: () => http.get('/history'),
+
+  send: (form) => http.post('/send', form),
+  composeUrl: (form) => http.post('/mail/compose-url', form),
+
+  schedule: () => http.get('/schedule'),
+  addSchedule: (payload) => http.post('/schedule', payload),
+  cancelSchedule: (id) => http.delete('/schedule/' + id)
 };
-
