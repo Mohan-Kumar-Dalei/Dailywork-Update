@@ -9,9 +9,9 @@ export default function NumberPick({ label, value, onChange }) {
   return (
     <>
       <button
-        className="block w-full min-w-[96px] px-3 py-[9px] text-center text-sm font-bold
-                   leading-[18px] tabular-nums text-ink cursor-pointer transition-colors
-                   hover:bg-brandsoft"
+        className="block w-full min-w-[96px] px-3 py-[10px] text-center text-[13px] font-semibold
+                   leading-[18px] tabular-nums text-ink rounded-[7px] cursor-pointer
+                   transition-colors duration-150 hover:bg-bg/70"
         onClick={() => { play('soft'); setOpen(true); }}
       >
         {Number(value) || 0}
