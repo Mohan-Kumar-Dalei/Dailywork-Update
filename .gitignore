@@ -6,3 +6,6 @@ dist/
 backend/data/
 backend/service-account.json
 backend/token.json
+
+# clasp me script ka apna ID hota hai -- har aadmi ka alag
+.clasp.json

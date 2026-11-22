@@ -32,7 +32,13 @@ set inside the app, in settings.
 
 #### 2. Add the files
 
-**The easy way — with clasp (everything in one command):**
+**The easy way — with clasp.** One command pushes every file, so you never
+paste anything again. Worth the five minutes even if the files are already in
+place by hand — this is also how you take later updates.
+
+First turn the API on once, at
+[script.google.com/home/usersettings](https://script.google.com/home/usersettings)
+→ **Google Apps Script API: On**. Then:
 
 ```bash
 npm install -g @google/clasp
@@ -42,18 +48,21 @@ npm install -g @google/clasp
 clasp login
 ```
 
-Then from this folder, using your own script ID:
+Make a `.clasp.json` inside `appsscript/` holding your script's ID — the ID is
+in the project URL, `script.google.com/home/projects/`**`<SCRIPT_ID>`**`/edit`:
 
-```bash
-cd appsscript && clasp clone <SCRIPT_ID> --rootDir .
+```json
+{ "scriptId": "PASTE_YOUR_SCRIPT_ID_HERE", "rootDir": "." }
 ```
 
+Then, from `appsscript/`:
+
 ```bash
-clasp push
+clasp push --force
 ```
 
-The script ID is in the project URL:
-`script.google.com/home/projects/`**`<SCRIPT_ID>`**`/edit`
+That uploads all the `.gs` files, `index.html` and `appsscript.json` together,
+replacing what is up there. `.clasp.json` is gitignored because the ID is yours.
 
 **By hand:** in the editor use **+ → Script** for each `.gs` file, keeping the same
 names (`Code`, `Settings`, `Sheet`, …), and **+ → HTML** for `index.html`. To see
@@ -185,7 +194,13 @@ karna hai wo app ke andar settings me set hota hai.
 
 #### 2. Files daalo
 
-**Aasaan tarika — clasp se (sab ek command me):**
+**Aasaan tarika — clasp se.** Ek command me saari files chadh jaati hain,
+dobara kabhi paste nahi karna padta. Files pehle se haath se daal rakhi hon to
+bhi ye paanch minute laga lena — aage ke update bhi isi se aayenge.
+
+Pehle ek baar API on karo:
+[script.google.com/home/usersettings](https://script.google.com/home/usersettings)
+→ **Google Apps Script API: On**. Phir:
 
 ```bash
 npm install -g @google/clasp
@@ -195,18 +210,23 @@ npm install -g @google/clasp
 clasp login
 ```
 
-Phir is folder me aakar, apne script ka ID daalkar:
+`appsscript/` ke andar ek `.clasp.json` banao jisme tumhare script ka ID ho —
+ID project ke URL me hota hai,
+`script.google.com/home/projects/`**`<SCRIPT_ID>`**`/edit`:
 
-```bash
-cd appsscript && clasp clone <SCRIPT_ID> --rootDir .
+```json
+{ "scriptId": "PASTE_YOUR_SCRIPT_ID_HERE", "rootDir": "." }
 ```
 
+Phir `appsscript/` me aakar:
+
 ```bash
-clasp push
+clasp push --force
 ```
 
-Script ID project ke URL me hota hai:
-`script.google.com/home/projects/`**`<SCRIPT_ID>`**`/edit`
+Isse saari `.gs`, `index.html` aur `appsscript.json` ek saath chadh jaati hain
+aur upar wali purani files replace ho jaati hain. `.clasp.json` gitignore me hai
+kyunki ID tumhara apna hai.
 
 **Ya haath se:** editor me har `.gs` file ke liye **+ → Script** aur naam wahi
 rakho (`Code`, `Settings`, `Sheet`, …), `index.html` ke liye **+ → HTML**.
