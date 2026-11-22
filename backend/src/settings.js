@@ -14,7 +14,7 @@ export const DEFAULT_REPORT_SHEET_NAME = 'Sourcing_Error_Report';
 const TEAM_KEYS = [
   'sheetId', 'sheetTitle', 'gid', 'tab', 'dataRowLabel', 'dateHeaderRow',
   'writeValue', 'valueField', 'commentMode', 'customFields', 'logSheetId', 'logTab',
-  'mailTo', 'mailCc', 'subjectPrefix', 'reportSheetName',
+  'mailTo', 'mailCc', 'subjectPrefix', 'reportSheetName', 'rowLabels',
   'mailStyle', 'extraColumns'
 ];
 
@@ -39,6 +39,8 @@ function defaults() {
     mailCc: config.mailCc,
     subjectPrefix: config.subjectPrefix,
     reportSheetName: DEFAULT_REPORT_SHEET_NAME,
+    // sirf badle hue labels yahan rehte hain, baaki default chalte hain
+    rowLabels: {},
     mailStyle: 'color',
     extraColumns: []
   };

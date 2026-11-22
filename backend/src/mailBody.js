@@ -18,16 +18,30 @@ const LINE = '#999999';
  * Table ki rows -- har row ka apna id, taaki extra columns ki values
  * sahi row se judi rahein. Custom fields hamesha Pending se upar.
  */
+/** Har row ka default label -- user inhe badal sakta hai. */
+export const DEFAULT_ROW_LABELS = {
+  sheetName: 'Sheet Name',
+  sourcing: 'Total No. of Sourcing',
+  fixed: 'No. of Fixed',
+  integration: 'No. of Integration Fixed',
+  highlight: 'No. of Highlight to Tech Team',
+  pending: 'Pending',
+  otherIssue: 'Other Issue'
+};
+
 export function mailRows(d, opts = {}) {
+  const custom = opts.rowLabels || {};
+  const label = (id) => custom[id] || DEFAULT_ROW_LABELS[id];
+
   return [
-    { id: 'sheetName', label: 'Sheet Name', value: opts.reportSheetName || '' },
-    { id: 'sourcing', label: 'Total No. of Sourcing', value: d.sourcing },
-    { id: 'fixed', label: 'No. of Fixed', value: d.fixed },
-    { id: 'integration', label: 'No. of Integration Fixed', value: d.integration },
-    { id: 'highlight', label: 'No. of Highlight to Tech Team', value: d.highlight },
-    ...(d.custom || []).map((f) => ({ id: f.id, label: f.label, value: f.value })),
-    { id: 'pending', label: 'Pending', value: d.pending },
-    { id: 'otherIssue', label: 'Other Issue', value: d.otherIssue }
+    { id: 'sheetName', label: label('sheetName'), value: opts.reportSheetName || '' },
+    { id: 'sourcing', label: label('sourcing'), value: d.sourcing },
+    { id: 'fixed', label: label('fixed'), value: d.fixed },
+    { id: 'integration', label: label('integration'), value: d.integration },
+    { id: 'highlight', label: label('highlight'), value: d.highlight },
+    ...(d.custom || []).map((f) => ({ id: f.id, label: custom[f.id] || f.label, value: f.value })),
+    { id: 'pending', label: label('pending'), value: d.pending },
+    { id: 'otherIssue', label: label('otherIssue'), value: d.otherIssue }
   ];
 }
 

@@ -33,6 +33,21 @@ const EMPTY = {
   pending: 0, otherIssue: 0, custom: {}, extra: {}
 };
 
+/**
+ * Table ki rows ke default naam. User inhe badal sakta hai -- badla hua
+ * naam settings.rowLabels me jaata hai, aur mail me bhi wahi dikhta hai.
+ * Default par wapas laane ke liye bas wahi text likh do (ya khaali chhod do).
+ */
+const DEFAULT_ROW_LABELS = {
+  sheetName: 'Sheet Name',
+  sourcing: 'Total No. of Sourcing',
+  fixed: 'No. of Fixed',
+  integration: 'No. of Integration Fixed',
+  highlight: 'No. of Highlight to Tech Team',
+  pending: 'Pending',
+  otherIssue: 'Other Issue'
+};
+
 export default function App() {
   const [cfg, setCfg] = useState(null);
   const [form, setForm] = useState({ date: '', ...EMPTY });
@@ -116,6 +131,32 @@ export default function App() {
       ...f,
       extra: { ...f.extra, [rowId]: { ...(f.extra?.[rowId] || {}), [colId]: text } }
     }));
+  }
+
+  /**
+   * Inline edits -- turant dikh jaayein aur peeche chup-chaap save ho jaayein.
+   * saveTeam add/remove ke liye hai, ye roz-marra ke typing ke liye.
+   */
+  async function saveQuiet(patch) {
+    setCfg((c) => ({ ...c, settings: { ...c.settings, ...patch } }));
+    try {
+      const r = await api.saveSettings(patch);
+      setCfg((c) => ({ ...c, settings: r.settings }));
+    } catch (e) {
+      setStatus({ err: true, msg: e.message });
+    }
+  }
+
+  /** Row ka naam badla -- default jaisa ho to override hata do. */
+  function renameRow(row, text) {
+    const next = { ...(cfg.settings.rowLabels || {}) };
+    const clean = String(text).trim();
+    const original = DEFAULT_ROW_LABELS[row.id] || row.original || '';
+
+    if (!clean || clean === original) delete next[row.id];
+    else next[row.id] = clean;
+
+    saveQuiet({ rowLabels: next });
   }
 
   async function saveTeam(patch) {
@@ -261,17 +302,21 @@ export default function App() {
 
   const hasRecipients = Boolean(cfg.recipients?.to?.length);
 
+  const rowLabels = cfg.settings.rowLabels || {};
+  const labelOf = (id) => rowLabels[id] || DEFAULT_ROW_LABELS[id];
+
   const tableRows = [
-    { id: 'sheetName', label: 'Sheet Name', value: cfg.settings.reportSheetName, readOnly: true },
-    { id: 'sourcing', label: 'Total No. of Sourcing', value: form.sourcing, key: 'sourcing' },
-    { id: 'fixed', label: 'No. of Fixed', value: form.fixed, key: 'fixed' },
-    { id: 'integration', label: 'No. of Integration Fixed', value: form.integration, key: 'integration' },
-    { id: 'highlight', label: 'No. of Highlight to Tech Team', value: form.highlight, key: 'highlight' },
+    { id: 'sheetName', label: labelOf('sheetName'), value: cfg.settings.reportSheetName, text: true },
+    { id: 'sourcing', label: labelOf('sourcing'), value: form.sourcing, key: 'sourcing' },
+    { id: 'fixed', label: labelOf('fixed'), value: form.fixed, key: 'fixed' },
+    { id: 'integration', label: labelOf('integration'), value: form.integration, key: 'integration' },
+    { id: 'highlight', label: labelOf('highlight'), value: form.highlight, key: 'highlight' },
     ...(cfg.settings.customFields || []).map((f) => ({
-      id: f.id, label: f.label, value: form.custom?.[f.id] ?? 0, custom: true
+      id: f.id, label: rowLabels[f.id] || f.label, original: f.label,
+      value: form.custom?.[f.id] ?? 0, custom: true
     })),
-    { id: 'pending', label: 'Pending', value: form.pending, key: 'pending' },
-    { id: 'otherIssue', label: 'Other Issue', value: form.otherIssue, key: 'otherIssue' }
+    { id: 'pending', label: labelOf('pending'), value: form.pending, key: 'pending' },
+    { id: 'otherIssue', label: labelOf('otherIssue'), value: form.otherIssue, key: 'otherIssue' }
   ];
 
   return (
@@ -395,6 +440,8 @@ export default function App() {
               columns={cfg.settings.extraColumns || []}
               rows={tableRows}
               onValue={(row, v) => (row.custom ? setCustom(row.id, v) : set(row.key, v))}
+              onText={(row, v) => row.id === 'sheetName' && saveQuiet({ reportSheetName: v })}
+              onLabel={renameRow}
               onExtra={setExtra}
               onAddRow={() => setAddingWhat('row')}
               onAddColumn={() => setAddingWhat('column')}

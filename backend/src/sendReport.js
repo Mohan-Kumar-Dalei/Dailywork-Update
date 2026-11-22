@@ -24,6 +24,7 @@ export async function makeReport(payload) {
     subjectPrefix: s.subjectPrefix,
     // khaali kar diya ho to default hi bhej do, row kabhi blank na dikhe
     reportSheetName: s.reportSheetName || DEFAULT_REPORT_SHEET_NAME,
+    rowLabels: s.rowLabels,
     mailStyle: payload.mailStyle || s.mailStyle,
     extraColumns: s.extraColumns
   });
