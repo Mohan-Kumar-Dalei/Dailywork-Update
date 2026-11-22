@@ -58,14 +58,18 @@ with your script's ID — the ID is in the project URL,
 > project only accepts one `.json` file and that is `appsscript.json`. If you
 > added one there, delete it.
 
-Then, from `appsscript/`:
+Then, from the repo root:
 
 ```bash
-clasp push --force
+npm run gas:push
 ```
 
 That uploads all the `.gs` files, `index.html` and `appsscript.json` together,
 replacing what is up there. `.clasp.json` is gitignored because the ID is yours.
+
+> `clasp` itself only works from inside `appsscript/`, where `.clasp.json` sits
+> — run it anywhere else and it says *"Project settings not found."* The npm
+> script changes directory for you, so it works from the repo root.
 
 **By hand:** in the editor use **+ → Script** for each `.gs` file, keeping the same
 names (`Code`, `Settings`, `Sheet`, …), and **+ → HTML** for `index.html`. To see
@@ -121,11 +125,11 @@ To get a row's default name back, clear the field.
 The real UI code lives in `frontend/`. After changing it:
 
 ```bash
-npm --prefix frontend run build:gas
+npm run gas
 ```
 
-That rebuilds `appsscript/index.html`. **Never edit that file by hand** — it is
-generated. Then `clasp push` (or paste the new contents).
+That rebuilds `appsscript/index.html` and pushes everything in one go.
+**Never edit that file by hand** — it is generated.
 
 After every UI change you also have to go to **Deploy → Manage deployments → edit →
 Version: New**, otherwise the old version keeps serving.
@@ -223,15 +227,19 @@ jagah apne script ka ID daal do — ID project ke URL me hota hai,
 > script project me sirf ek hi `.json` chal sakti hai — `appsscript.json`.
 > Wahan banayi ho to use delete kar do.
 
-Phir `appsscript/` me aakar:
+Phir repo root se:
 
 ```bash
-clasp push --force
+npm run gas:push
 ```
 
 Isse saari `.gs`, `index.html` aur `appsscript.json` ek saath chadh jaati hain
 aur upar wali purani files replace ho jaati hain. `.clasp.json` gitignore me hai
 kyunki ID tumhara apna hai.
+
+> `clasp` khud sirf `appsscript/` ke andar se chalta hai, jahan `.clasp.json`
+> hai — kahin aur se chalao to *"Project settings not found."* aata hai. npm
+> script khud folder badal leti hai, isliye wo repo root se chal jaati hai.
 
 **Ya haath se:** editor me har `.gs` file ke liye **+ → Script** aur naam wahi
 rakho (`Code`, `Settings`, `Sheet`, …), `index.html` ke liye **+ → HTML**.
@@ -288,11 +296,11 @@ Row ka naam badal kar wapas default chahiye to use khaali kar do.
 UI ka asli code `frontend/` me hai. Badal kar:
 
 ```bash
-npm --prefix frontend run build:gas
+npm run gas
 ```
 
-Isse `appsscript/index.html` dobara ban jaati hai. **Us file ko haath se mat
-edit karna** — wo generated hai. Phir `clasp push` (ya naya content paste).
+Isse `appsscript/index.html` dobara banti hai aur sab kuch push bhi ho jaata
+hai, ek hi command me. **Us file ko haath se mat edit karna** — wo generated hai.
 
 Har UI change ke baad **Deploy → Manage deployments → edit → Version: New** karna
 padta hai, warna purana version hi chalta rahega.
