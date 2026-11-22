@@ -1,0 +1,7 @@
+# clasp sirf ye files chadhaye -- README, .clasp.json waghairah nahi.
+# Apps Script project me appsscript.json ke alawa koi .json file nahi
+# ja sakti, warna wo use manifest samajh kar reject kar deta hai.
+**/**
+!appsscript.json
+!*.gs
+!index.html

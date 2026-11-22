@@ -48,12 +48,15 @@ npm install -g @google/clasp
 clasp login
 ```
 
-Make a `.clasp.json` inside `appsscript/` holding your script's ID — the ID is
-in the project URL, `script.google.com/home/projects/`**`<SCRIPT_ID>`**`/edit`:
+`appsscript/.clasp.json` is already there. Open it and replace the placeholder
+with your script's ID — the ID is in the project URL,
+`script.google.com/home/projects/`**`<SCRIPT_ID>`**`/edit`.
 
-```json
-{ "scriptId": "PASTE_YOUR_SCRIPT_ID_HERE", "rootDir": "." }
-```
+> `.clasp.json` lives **on your computer**, not in the Apps Script project.
+> Adding a `clasp.json` file inside the editor gives you
+> *"Invalid manifest: unknown fields: [scriptId, rootDir]"*, because a script
+> project only accepts one `.json` file and that is `appsscript.json`. If you
+> added one there, delete it.
 
 Then, from `appsscript/`:
 
@@ -210,13 +213,15 @@ npm install -g @google/clasp
 clasp login
 ```
 
-`appsscript/` ke andar ek `.clasp.json` banao jisme tumhare script ka ID ho —
-ID project ke URL me hota hai,
-`script.google.com/home/projects/`**`<SCRIPT_ID>`**`/edit`:
+`appsscript/.clasp.json` pehle se bani hui hai. Use kholo aur placeholder ki
+jagah apne script ka ID daal do — ID project ke URL me hota hai,
+`script.google.com/home/projects/`**`<SCRIPT_ID>`**`/edit`.
 
-```json
-{ "scriptId": "PASTE_YOUR_SCRIPT_ID_HERE", "rootDir": "." }
-```
+> `.clasp.json` tumhare **computer par** rehti hai, Apps Script project me
+> nahi. Editor ke andar `clasp.json` banane par
+> *"Invalid manifest: unknown fields: [scriptId, rootDir]"* aata hai, kyunki
+> script project me sirf ek hi `.json` chal sakti hai — `appsscript.json`.
+> Wahan banayi ho to use delete kar do.
 
 Phir `appsscript/` me aakar:
 
