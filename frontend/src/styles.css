@@ -4,33 +4,51 @@
 /*
  * Poora UI Tailwind me hai. Yahan sirf theme hai --
  * Tailwind v4 me --color-x likhne se bg-x / text-x / border-x / stroke-x
- * classes apne aap ban jaati hain, to hex codes kahin aur nahi likhne padte.
+ * classes apne aap ban jaati hain, aur --shadow-x se shadow-x. Isliye hex
+ * code ya rgba kahin aur nahi likhna chahiye: theme badalni ho to sirf
+ * yahi file badalti hai.
  */
 @theme {
   --font-sans: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
 
-  --color-bg: #f7f1e8;
-  --color-bg2: #efe5d6;
-  --color-card: #fffaf3;
-  --color-line: #e6d8c4;
-  --color-linesoft: #f0e6d8;
+  /* surfaces */
+  --color-bg: #f4f5f9;
+  --color-bg2: #e9ebf3;
+  --color-card: #ffffff;
 
-  --color-ink: #3b2f25;
-  --color-dim: #8a7562;
-  --color-faint: #a8917c;
+  /* lines -- line2 sirf hover par */
+  --color-line: #dcdfea;
+  --color-linesoft: #eceef5;
+  --color-line2: #c9cdde;
 
-  --color-brand: #c96a3a;
-  --color-brand2: #e0913f;
-  --color-brandsoft: #fbeade;
+  /* text */
+  --color-ink: #1f2437;
+  --color-dim: #5d6478;
+  --color-faint: #8d94a8;
 
-  --color-okbg: #eef4e4;
-  --color-oktext: #476030;
-  --color-warnbg: #fdf1da;
-  --color-warntext: #8a6212;
-  --color-errbg: #fbe8e3;
-  --color-errtext: #8d3d2f;
+  /* accent -- brandline brandsoft ke upar border ke liye */
+  --color-brand: #4f46e5;
+  --color-brand2: #6366f1;
+  --color-brandsoft: #e8e7fd;
+  --color-brandline: #c5c2f6;
+
+  /* status */
+  --color-okbg: #e6f4ec;
+  --color-oktext: #1f6b42;
+  --color-good: #2f9e63;
+  --color-warnbg: #fdf3e0;
+  --color-warntext: #8a5d12;
+  --color-errbg: #fdeaea;
+  --color-errtext: #99303a;
+
+  /* shadows -- sab ink ke neele-grey se bani hain, warm brown se nahi */
+  --shadow-card: 0 1px 2px rgba(31, 36, 55, .06);
+  --shadow-pop: 0 12px 30px rgba(31, 36, 55, .14);
+  --shadow-sheet: 0 28px 70px rgba(31, 36, 55, .28);
+  --shadow-panel: 0 20px 45px rgba(31, 36, 55, .16);
+  --shadow-brand: 0 4px 12px rgba(79, 70, 229, .25);
+  --shadow-brandlg: 0 8px 20px rgba(79, 70, 229, .3);
 
   /* mail ke table ka neela -- server ke mailBody.js me bhi yahi hai */
   --color-mailblue: #1155cc;
 }
-

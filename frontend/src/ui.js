@@ -7,7 +7,7 @@
 export const cx = (...parts) => parts.filter(Boolean).join(' ');
 
 export const card =
-  'bg-card border border-line rounded-[14px] p-4 mb-3.5 shadow-[0_1px_2px_rgba(120,85,50,.05)]';
+  'bg-card border border-line rounded-[14px] p-4 mb-3.5 shadow-card';
 
 export const cardTitle =
   'm-0 mb-3 text-[11.5px] font-semibold tracking-[.07em] uppercase text-faint';
@@ -22,12 +22,12 @@ export const input =
 export const btn =
   'inline-flex items-center justify-center gap-1.5 px-3.5 py-2 text-[12.5px] font-semibold ' +
   'text-ink bg-white border border-line rounded-[9px] cursor-pointer transition-colors ' +
-  'duration-150 hover:bg-bg2 hover:border-[#dcc9ae] disabled:opacity-45 disabled:cursor-not-allowed';
+  'duration-150 hover:bg-bg2 hover:border-line2 disabled:opacity-45 disabled:cursor-not-allowed';
 
 export const btnPrimary =
   'inline-flex items-center justify-center gap-1.5 px-3.5 py-2 text-[12.5px] font-semibold ' +
   'text-white bg-gradient-to-br from-brand to-brand2 border border-transparent rounded-[9px] ' +
-  'cursor-pointer shadow-[0_4px_12px_rgba(201,106,58,.25)] transition-[filter] duration-150 ' +
+  'cursor-pointer shadow-brand transition-[filter] duration-150 ' +
   'hover:brightness-105 disabled:opacity-45 disabled:cursor-not-allowed';
 
 export const btnGhost =
@@ -57,7 +57,7 @@ export const overlayIn = 'bg-ink/30 backdrop-blur-[7px]';
 export const overlayOut = 'bg-transparent backdrop-blur-0';
 
 export const sheet =
-  'bg-card border border-line rounded-[24px] shadow-[0_28px_70px_rgba(120,80,40,.3)] ' +
+  'bg-card border border-line rounded-[24px] shadow-sheet ' +
   'transition-[opacity,transform] duration-200 ease-out will-change-transform';
 export const sheetIn = 'opacity-100 scale-100 translate-y-0';
 export const sheetOut = 'opacity-0 scale-95 translate-y-2';

@@ -157,7 +157,7 @@ export default function RecipientInput({ label, note, value = [], onChange }) {
         {!!list.length && (
           <ul className="absolute z-20 left-0 right-0 mt-1 py-1 max-h-60 overflow-auto
                          bg-card border border-line rounded-[10px]
-                         shadow-[0_12px_30px_rgba(120,80,40,.18)]">
+                         shadow-pop">
             {list.map((p, i) => (
               <li key={p.email}>
                 <button

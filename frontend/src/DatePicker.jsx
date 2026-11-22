@@ -101,7 +101,7 @@ export default function DatePicker({ value, onChange, onClose }) {
                   'h-[38px] text-[13.5px] font-medium tabular-nums rounded-[10px]',
                   'transition-[background,color,transform] duration-100 active:scale-90',
                   isSelected(day)
-                    ? 'text-white bg-gradient-to-br from-brand to-brand2 shadow-[0_4px_10px_rgba(201,106,58,.3)]'
+                    ? 'text-white bg-gradient-to-br from-brand to-brand2 shadow-brand'
                     : cx('text-ink hover:bg-bg2', isToday(day) && 'text-brand font-bold')
                 )}
               >

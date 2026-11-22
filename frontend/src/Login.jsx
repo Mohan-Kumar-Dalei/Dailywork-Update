@@ -49,10 +49,10 @@ export default function Login({ cfg, authMessage }) {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-5 py-6">
-      <div className={cx(card, 'w-full max-w-[420px] m-0 px-7 py-8 shadow-[0_20px_45px_rgba(140,100,60,.14)]')}>
+      <div className={cx(card, 'w-full max-w-[420px] m-0 px-7 py-8 shadow-panel')}>
         <div className="w-11 h-11 mb-4 grid place-items-center rounded-[13px]
                         bg-gradient-to-br from-brand to-brand2
-                        shadow-[0_8px_20px_rgba(201,106,58,.3)]">
+                        shadow-brandlg">
           <Mark />
         </div>
 
@@ -76,7 +76,7 @@ export default function Login({ cfg, authMessage }) {
                 disabled={Boolean(busy)}
                 onClick={() => signIn(o.kind)}
                 className="flex items-center justify-center gap-2.5 w-full py-3 text-sm
-                           font-semibold text-[#3c4043] bg-white border border-line
+                           font-semibold text-ink bg-white border border-line
                            rounded-[10px] cursor-pointer transition-colors
                            hover:border-brand disabled:opacity-60"
               >

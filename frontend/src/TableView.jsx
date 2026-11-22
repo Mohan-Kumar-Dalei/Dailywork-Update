@@ -61,7 +61,7 @@ export default function TableView({
 
   return (
     <div className="overflow-hidden rounded-[12px] border border-line bg-card
-                    shadow-[0_1px_2px_rgba(120,85,50,.06)]">
+                    shadow-card">
       <div className="overflow-x-auto">
         <table className="w-full min-w-[400px] border-collapse text-[13px]">
           <thead>

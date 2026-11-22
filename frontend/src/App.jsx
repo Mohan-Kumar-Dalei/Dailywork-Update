@@ -458,7 +458,7 @@ export default function App() {
               </span>
             </span>
             <span className="px-2.5 py-0.5 font-mono text-[13px] font-bold text-brand
-                             bg-brandsoft border border-[#f0cdb4] rounded-md">
+                             bg-brandsoft border border-brandline rounded-md">
               {totalPending}
             </span>
           </div>
@@ -481,7 +481,7 @@ export default function App() {
                 {[
                   ['Tab', target.tab],
                   ['Cell', <span key="c" className="px-2.5 py-0.5 font-mono text-[12.5px] font-bold
-                                                    text-brand bg-brandsoft border border-[#f0cdb4]
+                                                    text-brand bg-brandsoft border border-brandline
                                                     rounded-md">{target.cell}</span>],
                   ['Date column', target.dateColumn],
                   ['Name row', target.personRow],
@@ -499,7 +499,7 @@ export default function App() {
           <h3 className="mt-4 mb-1.5 flex items-center gap-1.5 text-[11px] font-semibold
                          tracking-[.07em] uppercase text-faint">
             Cell comment
-            <span className="w-1.5 h-1.5 rounded-full bg-[#6a8f4f] animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-good animate-pulse" />
           </h3>
           {report ? (
             <pre className="m-0 p-3 font-mono text-[11.5px] leading-relaxed text-dim

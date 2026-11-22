@@ -63,7 +63,7 @@ export default function SheetSettings({ initial, onSaved }) {
             {initial?.sheetTitle || 'Untitled spreadsheet'}
           </div>
           <div className="inline-block my-1 px-2.5 py-0.5 text-xs font-semibold text-brand
-                          bg-brandsoft border border-[#f0cdb4] rounded-full">
+                          bg-brandsoft border border-brandline rounded-full">
             {initial?.tab || 'no tab selected'}
           </div>
           <p className={cx(hint, 'm-0')}>

@@ -187,7 +187,7 @@ export default function WheelPicker({ label, value, max = 100, items: given, onC
 
         <div className={cx('relative', WHEEL_H)}>
           <div
-            className={cx('absolute left-1 right-1 bg-brandsoft border-y border-[#eccdb4]',
+            className={cx('absolute left-1 right-1 bg-brandsoft border-y border-brandline',
               'rounded-[11px] pointer-events-none', BAND)}
           />
 
