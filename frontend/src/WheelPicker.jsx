@@ -15,12 +15,14 @@ const VISIBLE = 7;            // ek saath kitne numbers
 const HEIGHT = ITEM * VISIBLE;   // 308
 const PAD = (HEIGHT - ITEM) / 2; // 132 -- upar/neeche ka khali space
 const HIDE_AFTER = 1400;
+const WINDOW = 40;            // current ke dono taraf kitne items banane hain
 
 // Tailwind ko class ka naam poora likha hua chahiye, isliye ye constants
 // se nahi bante -- lekin numbers wahi hain jo upar hain.
 const WHEEL_H = 'h-[308px]';
 const BAND = 'top-[132px] h-11';
-const SPACER = 'h-[132px]';
+
+const GROW_BY = 100;   // list khatam hone se pehle itne aur jod do
 
 export default function WheelPicker({ label, value, max = 100, items: given, onChange, onClose }) {
   const { shown, close } = useSheet(onClose);
@@ -30,10 +32,27 @@ export default function WheelPicker({ label, value, max = 100, items: given, onC
   const lastIdx = useRef(0);
   const dragging = useRef(false);
 
-  const all = given || Array.from({ length: max + 1 }, (_, i) => i);
-  const isText = Boolean(given) && typeof all[0] === 'string';
+  const isText = Boolean(given) && typeof given[0] === 'string';
+
+  /**
+   * Numbers ki list ki koi upar ki seema nahi hai. Shuru me `max` tak hi
+   * banti hai, aur jaise-jaise neeche scroll karo, aur numbers jud jaate
+   * hain -- isliye 100 ke baad bhi kuch bhi chuna ja sakta hai. Bada
+   * number ek-ek karke scroll karne ke bajaye upar wale box me type bhi
+   * kiya ja sakta hai.
+   */
+  const [limit, setLimit] = useState(Math.max(max, Math.ceil((Number(value) || 0) + 20)));
+  const all = given || Array.from({ length: limit + 1 }, (_, i) => i);
 
   const [query, setQuery] = useState('');
+  const [typed, setTyped] = useState(String(Number(value) || 0));
+  // type karte hi list scroll hoti hai, aur us scroll ka handler box ko
+  // dobara likh deta tha -- "4870" ban jaata tha "140". Isliye type karne
+  // ke thodi der baad tak scroll box ko haath nahi lagata.
+  const typingAt = useRef(0);
+  // bada number type karne par list pehle badhni chahiye, tabhi scroll
+  // wahan tak pahunchega -- warna browser use list ke ant par rok deta hai
+  const pendingScroll = useRef(null);
   const itemList = query
     ? all.filter((i) => String(i).toLowerCase().includes(query.toLowerCase()))
     : all;
@@ -41,6 +60,18 @@ export default function WheelPicker({ label, value, max = 100, items: given, onC
   const startIdx = Math.max(0, itemList.findIndex((i) => String(i) === String(value)));
 
   const [current, setCurrent] = useState(startIdx);
+
+  /**
+   * Numbers lakhon tak ja sakte hain, par itne divs banana bhaari padta hai.
+   * Isliye sirf current ke aas-paas ke items banate hain aur upar-neeche
+   * khaali jagah chhod dete hain -- scroll ki lambai wahi rehti hai, bas
+   * dikhta utna hi hai jitna chahiye. Text lists chhoti hoti hain, unme
+   * ye zarurat nahi.
+   */
+  const windowed = !isText && itemList.length > WINDOW * 3;
+  const winStart = windowed ? Math.max(0, current - WINDOW) : 0;
+  const winEnd = windowed ? Math.min(last, current + WINDOW) : last;
+  const shownItems = windowed ? itemList.slice(winStart, winEnd + 1) : itemList;
   const [bar, setBar] = useState({ visible: false, top: 0, height: 20 });
 
   useEffect(() => {
@@ -68,6 +99,15 @@ export default function WheelPicker({ label, value, max = 100, items: given, onC
       clearTimeout(hideTimer.current);
     };
   }, []);
+
+  // list ka naya size lag jaane ke baad hi scroll karo
+  useEffect(() => {
+    if (pendingScroll.current == null) return;
+    const idx = pendingScroll.current;
+    pendingScroll.current = null;
+    listRef.current?.scrollTo({ top: idx * ITEM, behavior: 'auto' });
+    updateBar(false);
+  }, [limit, current]);
 
   function onSearch(text) {
     setQuery(text);
@@ -99,8 +139,12 @@ export default function WheelPicker({ label, value, max = 100, items: given, onC
     if (idx !== lastIdx.current) {
       lastIdx.current = idx;
       setCurrent(idx);
+      if (!isText && Date.now() - typingAt.current > 500) setTyped(String(itemList[idx]));
       play('tick');
     }
+
+    // ant ke paas pahunch gaye -- aur numbers jod do
+    if (!isText && idx > last - 5) setLimit((l) => l + GROW_BY);
 
     updateBar(true);
     clearTimeout(hideTimer.current);
@@ -120,12 +164,31 @@ export default function WheelPicker({ label, value, max = 100, items: given, onC
 
   /** State turant badalti hai -- warna jaldi click par highlight peeche reh jata hai. */
   function step(delta) {
-    const next = Math.max(0, Math.min(last, lastIdx.current + delta));
+    if (!isText && lastIdx.current + delta > last) setLimit((l) => l + GROW_BY);
+
+    const next = Math.max(0, Math.min(isText ? last : last + delta, lastIdx.current + delta));
     if (next === lastIdx.current) return;
     lastIdx.current = next;
     setCurrent(next);
+    if (!isText) setTyped(String(next));
     play('tick');
     scrollTo(next);
+  }
+
+  /** Box me number likhne par wheel wahin chala jaata hai. */
+  function onTyped(text) {
+    const clean = text.replace(/[^0-9]/g, '');
+    typingAt.current = Date.now();
+    setTyped(clean);
+    if (clean === '') return;
+
+    const n = Number(clean);
+    if (!Number.isFinite(n)) return;
+
+    if (n > limit) setLimit(n + GROW_BY);
+    lastIdx.current = n;
+    setCurrent(n);
+    pendingScroll.current = n;       // scroll agle render ke baad
   }
 
   function scrollTo(idx) {
@@ -135,7 +198,15 @@ export default function WheelPicker({ label, value, max = 100, items: given, onC
 
   function commit(idx) {
     play('done');
-    onChange(String(itemList[idx]));
+
+    if (!isText) {
+      // box khaali chhod diya ho to wheel par jo hai wahi lo
+      const n = typed === '' ? itemList[idx] : Number(typed);
+      onChange(String(Number.isFinite(n) ? n : 0));
+    } else {
+      onChange(String(itemList[idx]));
+    }
+
     close();
   }
 
@@ -185,6 +256,19 @@ export default function WheelPicker({ label, value, max = 100, items: given, onC
           </div>
         )}
 
+        {!isText && (
+          <input
+            type="text"
+            inputMode="numeric"
+            autoFocus
+            className={cx(input, 'mb-2 bg-bg text-center text-[15px] font-semibold tabular-nums')}
+            value={typed}
+            placeholder="Type any number"
+            onChange={(e) => onTyped(e.target.value)}
+            onFocus={(e) => e.target.select()}
+          />
+        )}
+
         <div className={cx('relative', WHEEL_H)}>
           <div
             className={cx('absolute left-1 right-1 bg-brandsoft border-y border-brandline',
@@ -197,11 +281,12 @@ export default function WheelPicker({ label, value, max = 100, items: given, onC
             className="h-full overflow-y-scroll snap-y snap-mandatory pr-[26px]
                        [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
-            <div className={SPACER} />
+            <div style={{ height: PAD + winStart * ITEM }} />
             {!itemList.length && (
               <div className="h-11 grid place-items-center text-[13px] text-faint">No match</div>
             )}
-            {itemList.map((item, i) => {
+            {shownItems.map((item, k) => {
+              const i = winStart + k;
               const d = Math.min(3, Math.abs(i - current));
               const on = i === current;
               return (
@@ -223,7 +308,7 @@ export default function WheelPicker({ label, value, max = 100, items: given, onC
                 </div>
               );
             })}
-            <div className={SPACER} />
+            <div style={{ height: (last - winEnd) * ITEM + PAD }} />
           </div>
 
           <div className="absolute top-0 right-0 bottom-0 w-[26px] flex flex-col items-center gap-1 z-[2]">

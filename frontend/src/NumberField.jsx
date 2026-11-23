@@ -11,7 +11,14 @@ import { cx } from './ui.js';
 
 const R = 33;
 const C = 2 * Math.PI * R;
-const MAX = 100;
+
+/**
+ * Number ki koi upar ki seema nahi hai. Ring ko bharne ke liye phir bhi ek
+ * paimana chahiye, isliye wo agle 100 tak ka leta hai -- 0-100 par pehle
+ * jaisa bharta hai, 140 par ring 200 me se 140 dikhati hai, waghairah.
+ */
+const SCALE_STEP = 100;
+const scaleFor = (n) => Math.max(SCALE_STEP, Math.ceil(n / SCALE_STEP) * SCALE_STEP);
 
 const stepBtn =
   'w-[30px] py-1 text-[13px] font-semibold text-dim bg-white border border-line rounded-md ' +
@@ -20,12 +27,12 @@ const stepBtn =
 
 export default function NumberField({ label, value, onChange, onRemove }) {
   const [open, setOpen] = useState(false);
-  const n = Math.min(MAX, Math.max(0, Number(value) || 0));
-  const offset = C - (n / MAX) * C;
+  const n = Math.max(0, Number(value) || 0);
+  const offset = C - (n / scaleFor(n)) * C;
 
   function bump(delta) {
     play(Math.abs(delta) === 1 ? 'tick' : 'soft');
-    onChange(String(Math.min(MAX, Math.max(0, n + delta))));
+    onChange(String(Math.max(0, n + delta)));
   }
 
   return (
@@ -60,8 +67,11 @@ export default function NumberField({ label, value, onChange, onRemove }) {
             strokeDashoffset={offset}
           />
         </svg>
-        <span className="absolute inset-0 grid place-items-center text-[21px] font-bold
-                         tabular-nums text-ink pointer-events-none">
+        <span className={cx(
+          'absolute inset-0 grid place-items-center font-bold tabular-nums',
+          'text-ink pointer-events-none',
+          String(n).length > 4 ? 'text-[15px]' : String(n).length > 3 ? 'text-[17px]' : 'text-[21px]'
+        )}>
           {n}
         </span>
       </button>
@@ -81,7 +91,6 @@ export default function NumberField({ label, value, onChange, onRemove }) {
         <WheelPicker
           label={label}
           value={n}
-          max={MAX}
           onChange={onChange}
           onClose={() => setOpen(false)}
         />
